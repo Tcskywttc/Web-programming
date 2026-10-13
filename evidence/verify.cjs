@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
 const crypto = require('node:crypto');
-const {chromium} = require('/Users/tcskywttc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium} = require('playwright');
 const root=path.resolve(__dirname,'..');const checks=[];const check=(name,value)=>{assert.ok(value,name);checks.push(name);};
 (async()=>{
  const server=http.createServer((req,res)=>{const n=decodeURIComponent(new URL(req.url,'http://localhost').pathname);if(n==='/favicon.ico'){res.writeHead(204);return res.end();}try{res.setHeader('Content-Type',({'.js':'text/javascript','.css':'text/css','.jpg':'image/jpeg','.pdf':'application/pdf'})[path.extname(n)]||'text/html');res.end(fs.readFileSync(path.join(root,n==='/'?'index.html':n)));}catch{res.writeHead(404);res.end();}});
@@ -50,8 +50,10 @@ const root=path.resolve(__dirname,'..');const checks=[];const check=(name,value)
  await page.locator('[data-filter="done"]').click();await page.locator('.todo-delete').first().click();check('筛选内删除不误改其他任务',await page.evaluate(()=>todos.length===2&&todos.filter(t=>t.completed).length===1));
  await input.fill('Enter 添加');await input.press('Enter');check('Enter 可添加且当前 done 筛选不显示新任务',await page.evaluate(()=>todos.length===3&&list.children.length===1));
  check('所有实际浏览器操作无未捕获异常',errors.length===0);
+ if(fs.existsSync(path.join(root,'../week6/index.html'))) {
  for(const [n,hash]of Object.entries(JSON.parse(fs.readFileSync(path.join(__dirname,'week6-baseline-hashes.json'))))){check(`W6 未改变：${n}`,crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'../week6',n))).digest('hex')===hash);}
  const before=fs.readFileSync(path.join(root,'../week6/index.html'),'utf8').replace(/<section id="todo"[\s\S]*?<\/section>/,'');const after=fs.readFileSync(path.join(root,'index.html'),'utf8').replace(/<section id="todo"[\s\S]*?<\/section>/,'');check('Todo 外原页面 HTML 完全保持',before===after);
+ }
  const report={passed:checks.length,browser:browser.version(),checks,layouts,immutable,clear,errors};fs.writeFileSync(path.join(__dirname,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  } finally{await browser.close();server.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

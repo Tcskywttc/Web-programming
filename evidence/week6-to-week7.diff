@@ -1,0 +1,207 @@
+diff --git a/index.html b/index.html
+index a461eae..440ec0f 100644
+--- a/index.html
++++ b/index.html
+@@ -181,6 +181,14 @@
+           <input id="todo-input" class="todo-input" type="text" placeholder="输入一项待办事项">
+           <button id="todo-add-btn" class="todo-add-btn" type="button">添加</button>
+         </div>
++        <div class="todo-filters" role="group" aria-label="筛选待办事项">
++          <button type="button" data-filter="all" aria-pressed="true">全部</button>
++          <button type="button" data-filter="active" aria-pressed="false">未完成</button>
++          <button type="button" data-filter="done" aria-pressed="false">已完成</button>
++        </div>
++        <p id="todo-summary" role="status"></p>
++        <p id="todo-empty">当前没有待办事项。</p>
++        <p id="todo-storage-status" class="todo-storage-status" role="status"></p>
+         <ul id="todo-list" class="todo-list" aria-label="待办事项列表"></ul>
+       </section>
+     </main>
+diff --git a/script.js b/script.js
+index f2262b8..9fd188c 100644
+--- a/script.js
++++ b/script.js
+@@ -1,28 +1,138 @@
+-(function () {
+-  const todoInput = document.getElementById("todo-input");
+-  const todoAddButton = document.getElementById("todo-add-btn");
+-  const todoList = document.getElementById("todo-list");
+-
+-  // 页面结构改变时，停止初始化并提示缺失的依赖。
+-  if (todoInput === null || todoAddButton === null || todoList === null) {
+-    console.warn("Todo 初始化失败：缺少输入框、添加按钮或列表元素。");
+-    return;
+-  }
++"use strict";
++
++// todos 是唯一任务状态；filter 只控制显示，不写入存储。
++const KEY = "web-week7-todos";
++const list = document.getElementById("todo-list");
++const input = document.getElementById("todo-input");
++const addBtn = document.getElementById("todo-add-btn");
++const storageStatus = document.getElementById("todo-storage-status");
++let storageMessage = "";
++let todos = load();
++let filter = "all";
+ 
+-  todoAddButton.addEventListener("click", function () {
+-    const todoText = todoInput.value.trim();
++function save() {
++  try {
++    localStorage.setItem(KEY, JSON.stringify(todos));
++    storageMessage = "";
++  } catch {
++    storageMessage = "当前更改仅保留在此页面，无法保存；刷新后可能丢失。";
++  }
++}
+ 
+-    // 空输入和纯空白输入不创建列表项。
+-    if (todoText === "") {
+-      return;
++function load() {
++  try {
++    const raw = localStorage.getItem(KEY);
++    if (raw === null) return [];
++    const parsed = JSON.parse(raw);
++    // 有效 JSON 不一定是任务数组；重复 ID 也会导致一次删除多项。
++    const valid = Array.isArray(parsed) && parsed.every(t =>
++      t !== null && typeof t === "object" &&
++      typeof t.id === "string" && t.id.length > 0 &&
++      typeof t.text === "string" && t.text.trim().length > 0 &&
++      typeof t.completed === "boolean");
++    if (!valid || new Set(parsed.map(t => t.id)).size !== parsed.length) {
++      throw new Error("Invalid todo data");
+     }
++    return parsed;
++  } catch {
++    storageMessage = "无法恢复已存任务，暂显示空列表；原存储未改动，新增任务后会尝试覆盖保存。";
++    return [];
++  }
++}
++
++function addTodo(text) {
++  const cleaned = text.trim();
++  if (!cleaned) return;
++  // UUID 避免同一毫秒连续添加时 Date.now() 重复。
++  todos = [...todos, { id: crypto.randomUUID(), text: cleaned, completed: false }];
++  save();
++  render();
++}
++
++function removeTodo(id) {
++  todos = todos.filter(t => t.id !== id);
++  save();
++  render();
++}
++
++// 此小改由 AI 辅助完成，报告中不记作禁用 AI 的独立练习。
++function clearCompleted() {
++  todos = todos.filter(t => !t.completed);
++  save();
++  render();
++}
+ 
+-    const todoItem = document.createElement("li");
+-    todoItem.textContent = todoText;
+-    todoList.appendChild(todoItem);
++function setFilter(value) {
++  if (!["all", "done", "active"].includes(value)) return;
++  filter = value;
++  render();
++}
+ 
+-    todoInput.value = "";
+-    // 可改进项：返回输入框，提升连续输入体验。
+-    todoInput.focus();
++function toggleTodo(id) {
++  todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
++  save();
++  render();
++}
++
++function render() {
++  if (!list) return;
++  // render 重建节点，先记住当前操作位置，再在新节点上恢复焦点。
++  const active = document.activeElement;
++  const focusedId = list.contains(active) ? active.closest("li")?.dataset.id : null;
++  const focusedAction = active?.classList.contains("todo-delete") ? ".todo-delete" : ".todo-toggle";
++  list.replaceChildren();
++  const shown = todos.filter(t =>
++    filter === "all" ? true : filter === "done" ? t.completed : !t.completed);
++  shown.forEach(({ id, text, completed }) => {
++    const li = document.createElement("li");
++    li.dataset.id = id;
++    li.className = completed ? "todo-item done" : "todo-item";
++    const toggle = document.createElement("button");
++    toggle.type = "button";
++    toggle.className = "todo-toggle";
++    toggle.textContent = text;
++    toggle.setAttribute("aria-pressed", String(completed));
++    li.addEventListener("click", () => toggleTodo(id));
++    const delBtn = document.createElement("button");
++    delBtn.type = "button";
++    delBtn.className = "todo-delete";
++    delBtn.textContent = "删除";
++    delBtn.setAttribute("aria-label", `删除：${text}`);
++    delBtn.addEventListener("click", event => {
++      event.stopPropagation();
++      removeTodo(id);
++    });
++    li.append(toggle, delBtn);
++    list.appendChild(li);
++  });
++  const done = todos.reduce((count, t) => count + (t.completed ? 1 : 0), 0);
++  document.getElementById("todo-summary").textContent = `共 ${todos.length} 项，已完成 ${done} 项，未完成 ${todos.length - done} 项`;
++  document.getElementById("todo-empty").hidden = shown.length > 0;
++  document.querySelectorAll("[data-filter]").forEach(button => {
++    button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
++  });
++  if (storageStatus) storageStatus.textContent = storageMessage;
++  if (focusedId) {
++    const row = Array.from(list.children).find(li => li.dataset.id === focusedId);
++    (row?.querySelector(focusedAction) || input)?.focus();
++  }
++}
++
++if (list && input && addBtn && document.getElementById("todo-summary") && document.getElementById("todo-empty")) {
++  const submit = () => {
++    if (!input.value.trim()) return;
++    addTodo(input.value);
++    input.value = "";
++    input.focus();
++  };
++  document.querySelectorAll("[data-filter]").forEach(button => {
++    button.addEventListener("click", () => setFilter(button.dataset.filter));
++  });
++  addBtn.addEventListener("click", submit);
++  input.addEventListener("keydown", event => {
++    if (event.key === "Enter" && !event.isComposing) submit();
+   });
+-})();
++  render();
++} else {
++  console.warn("Todo 初始化失败：缺少必要元素。");
++}
+diff --git a/style.css b/style.css
+index 7e5ae29..17cdc0a 100644
+--- a/style.css
++++ b/style.css
+@@ -420,3 +420,18 @@ article h3 + p {
+   .project-card { padding: 1.75rem; }
+   .skills-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ }
++
++/* W7: task rows are generated from state. */
++.todo-list { padding: 0; list-style: none; }
++.todo-item { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 0; }
++.todo-toggle, .todo-delete { min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
++.todo-toggle { flex: 1; min-width: 0; text-align: left; overflow-wrap: anywhere; }
++.todo-delete { flex: 0 0 auto; }
++.todo-item.done .todo-toggle { text-decoration: line-through; color: #aab8c7; }
++.todo button:focus-visible { outline: 2px solid #b8e6ff; outline-offset: 0.2rem; }
++
++.todo-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
++.todo-filters button { min-height: 2.75rem; padding: 0.5rem 0.9rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
++.todo-filters button[aria-pressed="true"] { background: #82c9e8; color: #0e141d; }
++.todo-storage-status { max-width: 40rem; color: #f4cc85; }
++.todo-storage-status:empty { display: none; }

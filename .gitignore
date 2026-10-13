@@ -3,3 +3,5 @@
 第7周AI协作记录.docx
 evidence/report-qa/
 __pycache__/
+node_modules/
+package-lock.json

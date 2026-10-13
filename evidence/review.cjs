@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
-const { chromium } = require('/Users/tcskywttc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const stage = process.argv[2] || 'before';
 (async () => {
