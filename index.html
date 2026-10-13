@@ -181,6 +181,13 @@
           <input id="todo-input" class="todo-input" type="text" placeholder="输入一项待办事项">
           <button id="todo-add-btn" class="todo-add-btn" type="button">添加</button>
         </div>
+        <div class="todo-filters" role="group" aria-label="筛选待办事项">
+          <button type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button type="button" data-filter="active" aria-pressed="false">未完成</button>
+          <button type="button" data-filter="done" aria-pressed="false">已完成</button>
+        </div>
+        <p id="todo-summary" role="status"></p>
+        <p id="todo-empty">当前没有待办事项。</p>
         <p id="todo-storage-status" class="todo-storage-status" role="status"></p>
         <ul id="todo-list" class="todo-list" aria-label="待办事项列表"></ul>
       </section>

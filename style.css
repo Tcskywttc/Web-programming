@@ -429,3 +429,9 @@ article h3 + p {
 .todo-delete { flex: 0 0 auto; }
 .todo-item.done .todo-toggle { text-decoration: line-through; color: #aab8c7; }
 .todo button:focus-visible { outline: 2px solid #b8e6ff; outline-offset: 0.2rem; }
+
+.todo-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.todo-filters button { min-height: 2.75rem; padding: 0.5rem 0.9rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
+.todo-filters button[aria-pressed="true"] { background: #82c9e8; color: #0e141d; }
+.todo-storage-status { max-width: 40rem; color: #f4cc85; }
+.todo-storage-status:empty { display: none; }

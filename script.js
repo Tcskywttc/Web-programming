@@ -1,6 +1,6 @@
 "use strict";
 
-// 单一任务状态；filter 在下一步加入，只控制显示哪些任务。
+// todos 是唯一任务状态；filter 只控制显示，不写入存储。
 const KEY = "web-week7-todos";
 const list = document.getElementById("todo-list");
 const input = document.getElementById("todo-input");
@@ -8,6 +8,7 @@ const addBtn = document.getElementById("todo-add-btn");
 const storageStatus = document.getElementById("todo-storage-status");
 let storageMessage = "";
 let todos = load();
+let filter = "all";
 
 function save() {
   try {
@@ -54,6 +55,19 @@ function removeTodo(id) {
   render();
 }
 
+// 此小改由 AI 辅助完成，报告中不记作禁用 AI 的独立练习。
+function clearCompleted() {
+  todos = todos.filter(t => !t.completed);
+  save();
+  render();
+}
+
+function setFilter(value) {
+  if (!["all", "done", "active"].includes(value)) return;
+  filter = value;
+  render();
+}
+
 function toggleTodo(id) {
   todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
   save();
@@ -67,7 +81,9 @@ function render() {
   const focusedId = list.contains(active) ? active.closest("li")?.dataset.id : null;
   const focusedAction = active?.classList.contains("todo-delete") ? ".todo-delete" : ".todo-toggle";
   list.replaceChildren();
-  todos.forEach(({ id, text, completed }) => {
+  const shown = todos.filter(t =>
+    filter === "all" ? true : filter === "done" ? t.completed : !t.completed);
+  shown.forEach(({ id, text, completed }) => {
     const li = document.createElement("li");
     li.dataset.id = id;
     li.className = completed ? "todo-item done" : "todo-item";
@@ -89,6 +105,12 @@ function render() {
     li.append(toggle, delBtn);
     list.appendChild(li);
   });
+  const done = todos.reduce((count, t) => count + (t.completed ? 1 : 0), 0);
+  document.getElementById("todo-summary").textContent = `共 ${todos.length} 项，已完成 ${done} 项，未完成 ${todos.length - done} 项`;
+  document.getElementById("todo-empty").hidden = shown.length > 0;
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.filter === filter));
+  });
   if (storageStatus) storageStatus.textContent = storageMessage;
   if (focusedId) {
     const row = Array.from(list.children).find(li => li.dataset.id === focusedId);
@@ -96,13 +118,16 @@ function render() {
   }
 }
 
-if (list && input && addBtn) {
+if (list && input && addBtn && document.getElementById("todo-summary") && document.getElementById("todo-empty")) {
   const submit = () => {
     if (!input.value.trim()) return;
     addTodo(input.value);
     input.value = "";
     input.focus();
   };
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    button.addEventListener("click", () => setFilter(button.dataset.filter));
+  });
   addBtn.addEventListener("click", submit);
   input.addEventListener("keydown", event => {
     if (event.key === "Enter" && !event.isComposing) submit();
