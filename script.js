@@ -5,15 +5,38 @@ const KEY = "web-week7-todos";
 const list = document.getElementById("todo-list");
 const input = document.getElementById("todo-input");
 const addBtn = document.getElementById("todo-add-btn");
+const storageStatus = document.getElementById("todo-storage-status");
+let storageMessage = "";
 let todos = load();
 
 function save() {
-  localStorage.setItem(KEY, JSON.stringify(todos));
+  try {
+    localStorage.setItem(KEY, JSON.stringify(todos));
+    storageMessage = "";
+  } catch {
+    storageMessage = "当前更改仅保留在此页面，无法保存；刷新后可能丢失。";
+  }
 }
 
 function load() {
-  const raw = localStorage.getItem(KEY);
-  return raw === null ? [] : JSON.parse(raw);
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw === null) return [];
+    const parsed = JSON.parse(raw);
+    // 有效 JSON 不一定是任务数组；重复 ID 也会导致一次删除多项。
+    const valid = Array.isArray(parsed) && parsed.every(t =>
+      t !== null && typeof t === "object" &&
+      typeof t.id === "string" && t.id.length > 0 &&
+      typeof t.text === "string" && t.text.trim().length > 0 &&
+      typeof t.completed === "boolean");
+    if (!valid || new Set(parsed.map(t => t.id)).size !== parsed.length) {
+      throw new Error("Invalid todo data");
+    }
+    return parsed;
+  } catch {
+    storageMessage = "无法恢复已存任务，暂显示空列表；原存储未改动，新增任务后会尝试覆盖保存。";
+    return [];
+  }
 }
 
 function addTodo(text) {
@@ -38,6 +61,11 @@ function toggleTodo(id) {
 }
 
 function render() {
+  if (!list) return;
+  // render 重建节点，先记住当前操作位置，再在新节点上恢复焦点。
+  const active = document.activeElement;
+  const focusedId = list.contains(active) ? active.closest("li")?.dataset.id : null;
+  const focusedAction = active?.classList.contains("todo-delete") ? ".todo-delete" : ".todo-toggle";
   list.replaceChildren();
   todos.forEach(({ id, text, completed }) => {
     const li = document.createElement("li");
@@ -61,6 +89,11 @@ function render() {
     li.append(toggle, delBtn);
     list.appendChild(li);
   });
+  if (storageStatus) storageStatus.textContent = storageMessage;
+  if (focusedId) {
+    const row = Array.from(list.children).find(li => li.dataset.id === focusedId);
+    (row?.querySelector(focusedAction) || input)?.focus();
+  }
 }
 
 if (list && input && addBtn) {
