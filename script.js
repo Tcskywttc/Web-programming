@@ -1,28 +1,80 @@
-(function () {
-  const todoInput = document.getElementById("todo-input");
-  const todoAddButton = document.getElementById("todo-add-btn");
-  const todoList = document.getElementById("todo-list");
+"use strict";
 
-  // 页面结构改变时，停止初始化并提示缺失的依赖。
-  if (todoInput === null || todoAddButton === null || todoList === null) {
-    console.warn("Todo 初始化失败：缺少输入框、添加按钮或列表元素。");
-    return;
-  }
+// 单一任务状态；filter 在下一步加入，只控制显示哪些任务。
+const KEY = "web-week7-todos";
+const list = document.getElementById("todo-list");
+const input = document.getElementById("todo-input");
+const addBtn = document.getElementById("todo-add-btn");
+let todos = load();
 
-  todoAddButton.addEventListener("click", function () {
-    const todoText = todoInput.value.trim();
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(todos));
+}
 
-    // 空输入和纯空白输入不创建列表项。
-    if (todoText === "") {
-      return;
-    }
+function load() {
+  const raw = localStorage.getItem(KEY);
+  return raw === null ? [] : JSON.parse(raw);
+}
 
-    const todoItem = document.createElement("li");
-    todoItem.textContent = todoText;
-    todoList.appendChild(todoItem);
+function addTodo(text) {
+  const cleaned = text.trim();
+  if (!cleaned) return;
+  // UUID 避免同一毫秒连续添加时 Date.now() 重复。
+  todos = [...todos, { id: crypto.randomUUID(), text: cleaned, completed: false }];
+  save();
+  render();
+}
 
-    todoInput.value = "";
-    // 可改进项：返回输入框，提升连续输入体验。
-    todoInput.focus();
+function removeTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  save();
+  render();
+}
+
+function toggleTodo(id) {
+  todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+  save();
+  render();
+}
+
+function render() {
+  list.replaceChildren();
+  todos.forEach(({ id, text, completed }) => {
+    const li = document.createElement("li");
+    li.dataset.id = id;
+    li.className = completed ? "todo-item done" : "todo-item";
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "todo-toggle";
+    toggle.textContent = text;
+    toggle.setAttribute("aria-pressed", String(completed));
+    li.addEventListener("click", () => toggleTodo(id));
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "todo-delete";
+    delBtn.textContent = "删除";
+    delBtn.setAttribute("aria-label", `删除：${text}`);
+    delBtn.addEventListener("click", event => {
+      event.stopPropagation();
+      removeTodo(id);
+    });
+    li.append(toggle, delBtn);
+    list.appendChild(li);
   });
-})();
+}
+
+if (list && input && addBtn) {
+  const submit = () => {
+    if (!input.value.trim()) return;
+    addTodo(input.value);
+    input.value = "";
+    input.focus();
+  };
+  addBtn.addEventListener("click", submit);
+  input.addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.isComposing) submit();
+  });
+  render();
+} else {
+  console.warn("Todo 初始化失败：缺少必要元素。");
+}

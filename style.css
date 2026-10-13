@@ -420,3 +420,12 @@ article h3 + p {
   .project-card { padding: 1.75rem; }
   .skills-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* W7: task rows are generated from state. */
+.todo-list { padding: 0; list-style: none; }
+.todo-item { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 0; }
+.todo-toggle, .todo-delete { min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
+.todo-toggle { flex: 1; min-width: 0; text-align: left; overflow-wrap: anywhere; }
+.todo-delete { flex: 0 0 auto; }
+.todo-item.done .todo-toggle { text-decoration: line-through; color: #aab8c7; }
+.todo button:focus-visible { outline: 2px solid #b8e6ff; outline-offset: 0.2rem; }
