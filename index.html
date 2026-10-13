@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>廖子豪 · Tcskywttc | 个人作品集</title>
+  </head>
+  <body>
+    <header id="top" class="site-header">
+      <p><a href="#home" lang="en">Tcskywttc</a></p>
+      <nav class="primary-nav" aria-label="主导航">
+        <ul>
+          <li><a href="#home">首页 <span lang="en">Home</span></a></li>
+          <li><a href="#projects">项目 <span lang="en">Projects</span></a></li>
+          <li><a href="#about">关于 <span lang="en">About</span></a></li>
+          <li><a href="#experience">科研 <span lang="en">Experience</span></a></li>
+          <li><a href="#skills">技能 <span lang="en">Skills</span></a></li>
+          <li><a href="#contact">联系 <span lang="en">Contact</span></a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-content">
+          <p>你好，我是</p>
+          <h1>廖子豪</h1>
+          <p class="hero-handle">网络昵称：<span lang="en">Tcskywttc</span></p>
+          <p>深圳大学 · 计算机科学与技术本科在读</p>
+          <p>围绕计算机视觉与深度学习，完成从模型训练到交互展示的项目实践。</p>
+          <p>
+            <a class="hero-cta" href="#projects">查看项目 <span lang="en">View Projects</span></a>
+            <a href="https://github.com/Tcskywttc">GitHub</a>
+          </p>
+        </div>
+        <img src="images/avatar.jpg" alt="廖子豪（Tcskywttc）的头像" width="240" height="300">
+      </section>
+
+      <section id="projects" class="projects">
+        <h2>精选项目 <span lang="en">Featured Projects</span></h2>
+
+        <div class="project-list">
+          <article class="project-card">
+            <h3>
+              基于 YOLO-OBB 与 PaddleOCR 的口算作业自动批改系统
+              <span lang="en">Automatic Arithmetic Homework Grading System</span>
+            </h3>
+            <p>2025 年 11 月至 12 月</p>
+            <p class="project-summary" lang="en">An arithmetic homework grading system combining oriented object detection, OCR, and recognition correction.</p>
+            <p>技术栈 <span lang="en">Tech Stack</span></p>
+            <ul>
+              <li>Python</li>
+              <li>PyTorch</li>
+              <li>OpenCV</li>
+              <li>PaddleOCR</li>
+              <li>Gradio</li>
+            </ul>
+            <dl>
+              <dt>项目背景 <span lang="en">Problem</span></dt>
+              <dd>真实作业照片存在倾斜、透视变形与密集算式框；小数点、乘除号和数字“1”的 OCR 误识别会影响最终判分。</dd>
+              <dt>我的方法 <span lang="en">Approach</span></dt>
+              <dd>将水平框标签转换为旋转框，使用旋转、透视及图像质量增强训练 YOLO11n-OBB；对检测区域透视裁剪并预处理后接入 PP-OCRv5，再用运算符归一化、字符白名单和常见误识别修正规则完成识别与判分。</dd>
+              <dt>项目结果 <span lang="en">Result</span></dt>
+              <dd>主线模型在验证集上达到 mAP50 0.9938、mAP50-95 0.8165；检测约需 0.02–0.05 秒/张，完整识别与判分约需 0.4–0.5 秒/张。使用 Gradio 展示错题标注、反馈记录与性能报告，并搭建 ONNX、INT8 量化及 30% L1 剪枝的部署对比流程。</dd>
+            </dl>
+          </article>
+
+          <article class="project-card">
+            <h3>
+              多特征融合图像检索系统
+              <span lang="en">Multi-Feature Image Retrieval System</span>
+            </h3>
+            <p>2026 年 6 月</p>
+            <p class="project-summary" lang="en">An image retrieval system that combines deep, color, texture, and dHash features for similarity ranking.</p>
+            <p>技术栈 <span lang="en">Tech Stack</span></p>
+            <ul>
+              <li>Python</li>
+              <li>PyTorch</li>
+              <li>OpenCV</li>
+              <li>Streamlit</li>
+            </ul>
+            <dl>
+              <dt>项目背景 <span lang="en">Problem</span></dt>
+              <dd>单一颜色、纹理或哈希特征难以稳定表达图像类别；不同特征的数值尺度也会影响融合排序，查询图参与排序则可能抬高评价指标。</dd>
+              <dt>我的方法 <span lang="en">Approach</span></dt>
+              <dd>基于 Imagenette 构建 10 类、1000 张图片的检索库，微调 ResNet18 并提取 512 维深度特征；分别归一化深度、HSV、LBP 和 dHash 特征后加权融合，排除查询图，再按余弦相似度排序。</dd>
+              <dt>项目结果 <span lang="en">Result</span></dt>
+              <dd>在 5 张查询图上的平均 Precision@20 为 1.0000、Recall@20 为 0.2020；使用 Streamlit 实现可配置特征类型、查询图片与 Top-K 的检索展示和指标对比。ResNet18 的最佳验证准确率为 96.5%。</dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>关于我 <span lang="en">About Me</span></h2>
+        <p>我是深圳大学计算机科学与技术专业的本科生。我的项目实践涉及目标检测、OCR 和图像检索，也在科研训练中学习多模态模型与图像生成方法。</p>
+      </section>
+
+      <section id="experience">
+        <h2>科研与经历 <span lang="en">Research &amp; Experience</span></h2>
+        <article>
+          <h3>MUSELAB 深度学习与多模态科研训练</h3>
+          <p>2025 年 11 月至今</p>
+          <ul>
+            <li>完成 CS231n 图像分类及 CNN、RNN、Transformer、CLIP、DDPM 等实验，练习模型训练、评估与调试。</li>
+            <li>参与 CLIP-ViT 表征分解、Attention Head 语义解释与 Zero-shot Segmentation 等论文精读；在 Linux/CUDA 环境部署 Stable Diffusion 与 ControlNet，观察不同条件图对生成结构的影响。</li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="skills">
+        <h2>技能与工具 <span lang="en">Skills &amp; Tools</span></h2>
+        <div class="skills-list">
+          <div class="skill-group">
+            <h3>编程语言 <span lang="en">Programming</span></h3>
+            <ul>
+              <li>Python</li>
+              <li>C++</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>深度学习与视觉 <span lang="en">Vision &amp; Deep Learning</span></h3>
+            <ul>
+              <li>PyTorch</li>
+              <li>OpenCV</li>
+              <li>YOLO</li>
+              <li>PaddleOCR</li>
+              <li>Transformers</li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3>工程与展示 <span lang="en">Engineering &amp; Demos</span></h3>
+            <ul>
+              <li>Linux</li>
+              <li>Git</li>
+              <li>CUDA</li>
+              <li>ONNX</li>
+              <li>Gradio</li>
+              <li>Streamlit</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="education">
+        <h2>教育背景 <span lang="en">Education</span></h2>
+        <h3>深圳大学</h3>
+        <p>计算机科学与技术 · 本科在读，2028 届 · 2024 年 9 月至今</p>
+        <dl>
+          <dt>GPA</dt>
+          <dd>3.86</dd>
+          <dt>专业排名</dt>
+          <dd>前 11%</dd>
+          <dt>英语成绩</dt>
+          <dd>CET-4 573 分；CET-6 490 分</dd>
+        </dl>
+      </section>
+
+      <section id="awards">
+        <h2>奖项与认证 <span lang="en">Awards &amp; Achievements</span></h2>
+        <ul>
+          <li>CCF CSP 认证，180 分（2025 年 9 月）</li>
+          <li>国家励志奖学金（2025 年 10 月）</li>
+        </ul>
+      </section>
+
+      <section id="contact">
+        <h2>联系我 <span lang="en">Contact</span></h2>
+        <p>可以通过邮件或 GitHub 联系我。</p>
+        <ul>
+          <li>邮箱：<a href="mailto:2464918278@qq.com">2464918278@qq.com</a></li>
+          <li>GitHub：<a href="https://github.com/Tcskywttc">github.com/Tcskywttc</a></li>
+        </ul>
+      </section>
+
+      <section id="todo" class="todo">
+        <h2>待办事项 <span lang="en">Todo List</span></h2>
+        <label class="todo-label" for="todo-input">新的待办事项</label>
+        <div class="todo-controls">
+          <input id="todo-input" class="todo-input" type="text" placeholder="输入一项待办事项">
+          <button id="todo-add-btn" class="todo-add-btn" type="button">添加</button>
+        </div>
+        <ul id="todo-list" class="todo-list" aria-label="待办事项列表"></ul>
+      </section>
+    </main>
+
+    <aside class="quick-actions">
+      <nav aria-label="快捷操作">
+        <ul>
+          <li><a href="https://github.com/Tcskywttc">GitHub</a></li>
+          <li><a href="mailto:2464918278@qq.com">Email</a></li>
+          <li><a href="assets/resume.pdf">公开简历 <span lang="en">Resume</span></a></li>
+          <li><a href="#top">返回顶部 <span lang="en">Back to Top</span></a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <footer class="site-footer">
+      <p>© 2026 廖子豪 · <span lang="en">Tcskywttc</span></p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
