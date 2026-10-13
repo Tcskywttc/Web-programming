@@ -1,0 +1,16 @@
+{
+  "stage": "before",
+  "browser": "155.0.8059.39",
+  "focus": {
+    "tag": "BODY",
+    "css": "",
+    "completed": true
+  },
+  "corrupt": {
+    "errors": [
+      "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+    ],
+    "items": 0,
+    "notice": null
+  }
+}

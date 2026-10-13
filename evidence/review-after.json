@@ -1,0 +1,14 @@
+{
+  "stage": "after",
+  "browser": "155.0.8059.39",
+  "focus": {
+    "tag": "BUTTON",
+    "css": "todo-toggle",
+    "completed": true
+  },
+  "corrupt": {
+    "errors": [],
+    "items": 1,
+    "notice": ""
+  }
+}
