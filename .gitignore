@@ -5,3 +5,7 @@ evidence/report-qa/
 __pycache__/
 node_modules/
 package-lock.json
+
+# 本地报告整理工具和排版检查
+evidence/build_report.py
+evidence/report-fidelity.json

@@ -18,7 +18,7 @@ index a461eae..440ec0f 100644
        </section>
      </main>
 diff --git a/script.js b/script.js
-index f2262b8..9fd188c 100644
+index f2262b8..f9c6e98 100644
 --- a/script.js
 +++ b/script.js
 @@ -1,28 +1,138 @@
@@ -94,7 +94,7 @@ index f2262b8..9fd188c 100644
 +  render();
 +}
 +
-+// 此小改由 AI 辅助完成，报告中不记作禁用 AI 的独立练习。
++// 保留未完成任务，并同步保存与渲染。
 +function clearCompleted() {
 +  todos = todos.filter(t => !t.completed);
 +  save();

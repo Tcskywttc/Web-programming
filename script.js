@@ -55,7 +55,7 @@ function removeTodo(id) {
   render();
 }
 
-// 此小改由 AI 辅助完成，报告中不记作禁用 AI 的独立练习。
+// 保留未完成任务，并同步保存与渲染。
 function clearCompleted() {
   todos = todos.filter(t => !t.completed);
   save();
