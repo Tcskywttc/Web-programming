@@ -50,6 +50,7 @@ function addTodo(text) {
 }
 
 function removeTodo(id) {
+  console.log("[delete]", id);
   todos = todos.filter(t => t.id !== id);
   save();
   render();
@@ -69,6 +70,7 @@ function setFilter(value) {
 }
 
 function toggleTodo(id) {
+  console.log("[toggle]", id);
   todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
   save();
   render();
@@ -93,7 +95,6 @@ function render() {
     toggle.dataset.action = "toggle";
     toggle.textContent = text;
     toggle.setAttribute("aria-pressed", String(completed));
-    li.addEventListener("click", () => toggleTodo(id));
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.className = "todo-delete";
@@ -102,10 +103,6 @@ function render() {
     deleteLabel.textContent = "删除";
     delBtn.appendChild(deleteLabel);
     delBtn.setAttribute("aria-label", `删除：${text}`);
-    delBtn.addEventListener("click", event => {
-      event.stopPropagation();
-      removeTodo(id);
-    });
     li.append(toggle, delBtn);
     list.appendChild(li);
   });
@@ -122,7 +119,24 @@ function render() {
   }
 }
 
+// 父容器不会被 render 替换；动态任务统一通过冒泡进入这里。
+function handleListClick(event) {
+  if (!(event.target instanceof Element)) return;
+  const item = event.target.closest("li");
+  if (!item || !list.contains(item) || item.parentElement !== list) return;
+  const id = item.dataset.id;
+  if (!id || !todos.some(todo => todo.id === id)) return;
+  const action = event.target.closest("[data-action]");
+  if (action && !item.contains(action)) return;
+  if (action?.dataset.action === "delete") {
+    removeTodo(id);
+    return;
+  }
+  if (!action || action.dataset.action === "toggle") toggleTodo(id);
+}
+
 if (list && input && addBtn && document.getElementById("todo-summary") && document.getElementById("todo-empty")) {
+  list.addEventListener("click", handleListClick);
   const submit = () => {
     if (!input.value.trim()) return;
     addTodo(input.value);
