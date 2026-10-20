@@ -1,7 +1,7 @@
 "use strict";
 
 // todos 是唯一任务状态；filter 只控制显示，不写入存储。
-const KEY = "web-week7-todos";
+const KEY = "web-week8-todos";
 const list = document.getElementById("todo-list");
 const input = document.getElementById("todo-input");
 const addBtn = document.getElementById("todo-add-btn");
@@ -50,6 +50,7 @@ function addTodo(text) {
 }
 
 function removeTodo(id) {
+  console.log("[delete]", id);
   todos = todos.filter(t => t.id !== id);
   save();
   render();
@@ -69,7 +70,17 @@ function setFilter(value) {
 }
 
 function toggleTodo(id) {
+  console.log("[toggle]", id);
   todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+  save();
+  render();
+}
+
+function updateTodo(id, text) {
+  if (typeof text !== "string") return;
+  const cleaned = text.trim();
+  if (!cleaned || !todos.some(todo => todo.id === id && todo.text !== cleaned)) return;
+  todos = todos.map(todo => todo.id === id ? { ...todo, text: cleaned } : todo);
   save();
   render();
 }
@@ -79,7 +90,7 @@ function render() {
   // render 重建节点，先记住当前操作位置，再在新节点上恢复焦点。
   const active = document.activeElement;
   const focusedId = list.contains(active) ? active.closest("li")?.dataset.id : null;
-  const focusedAction = active?.classList.contains("todo-delete") ? ".todo-delete" : ".todo-toggle";
+  const focusedAction = active?.dataset.action || "toggle";
   list.replaceChildren();
   const shown = todos.filter(t =>
     filter === "all" ? true : filter === "done" ? t.completed : !t.completed);
@@ -90,19 +101,24 @@ function render() {
     const toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "todo-toggle";
+    toggle.dataset.action = "toggle";
     toggle.textContent = text;
     toggle.setAttribute("aria-pressed", String(completed));
-    li.addEventListener("click", () => toggleTodo(id));
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.className = "todo-delete";
-    delBtn.textContent = "删除";
+    delBtn.dataset.action = "delete";
+    const deleteLabel = document.createElement("span");
+    deleteLabel.textContent = "删除";
+    delBtn.appendChild(deleteLabel);
     delBtn.setAttribute("aria-label", `删除：${text}`);
-    delBtn.addEventListener("click", event => {
-      event.stopPropagation();
-      removeTodo(id);
-    });
-    li.append(toggle, delBtn);
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "todo-edit";
+    editBtn.dataset.action = "edit";
+    editBtn.textContent = "编辑";
+    editBtn.setAttribute("aria-label", `编辑：${text}`);
+    li.append(toggle, editBtn, delBtn);
     list.appendChild(li);
   });
   const done = todos.reduce((count, t) => count + (t.completed ? 1 : 0), 0);
@@ -114,11 +130,35 @@ function render() {
   if (storageStatus) storageStatus.textContent = storageMessage;
   if (focusedId) {
     const row = Array.from(list.children).find(li => li.dataset.id === focusedId);
-    (row?.querySelector(focusedAction) || input)?.focus();
+    const button = row && Array.from(row.children).find(child => child.dataset.action === focusedAction);
+    (button || input)?.focus();
   }
 }
 
+// 父容器不会被 render 替换；动态任务统一通过冒泡进入这里。
+function handleListClick(event) {
+  if (!(event.target instanceof Element)) return;
+  const item = event.target.closest("li");
+  if (!item || !list.contains(item) || item.parentElement !== list) return;
+  const id = item.dataset.id;
+  if (!id || !todos.some(todo => todo.id === id)) return;
+  const action = event.target.closest("[data-action]");
+  if (action && !item.contains(action)) return;
+  if (action?.dataset.action === "delete") {
+    removeTodo(id);
+    return;
+  }
+  if (action?.dataset.action === "edit") {
+    const todo = todos.find(todo => todo.id === id);
+    const text = window.prompt("修改任务", todo.text);
+    updateTodo(id, text);
+    return;
+  }
+  if (!action || action.dataset.action === "toggle") toggleTodo(id);
+}
+
 if (list && input && addBtn && document.getElementById("todo-summary") && document.getElementById("todo-empty")) {
+  list.addEventListener("click", handleListClick);
   const submit = () => {
     if (!input.value.trim()) return;
     addTodo(input.value);
