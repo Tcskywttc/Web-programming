@@ -1,7 +1,7 @@
 "use strict";
 
 // todos 是唯一任务状态；filter 只控制显示，不写入存储。
-const KEY = "web-week7-todos";
+const KEY = "web-week8-todos";
 const list = document.getElementById("todo-list");
 const input = document.getElementById("todo-input");
 const addBtn = document.getElementById("todo-add-btn");
@@ -90,13 +90,17 @@ function render() {
     const toggle = document.createElement("button");
     toggle.type = "button";
     toggle.className = "todo-toggle";
+    toggle.dataset.action = "toggle";
     toggle.textContent = text;
     toggle.setAttribute("aria-pressed", String(completed));
     li.addEventListener("click", () => toggleTodo(id));
     const delBtn = document.createElement("button");
     delBtn.type = "button";
     delBtn.className = "todo-delete";
-    delBtn.textContent = "删除";
+    delBtn.dataset.action = "delete";
+    const deleteLabel = document.createElement("span");
+    deleteLabel.textContent = "删除";
+    delBtn.appendChild(deleteLabel);
     delBtn.setAttribute("aria-label", `删除：${text}`);
     delBtn.addEventListener("click", event => {
       event.stopPropagation();
