@@ -76,12 +76,21 @@ function toggleTodo(id) {
   render();
 }
 
+function updateTodo(id, text) {
+  if (typeof text !== "string") return;
+  const cleaned = text.trim();
+  if (!cleaned || !todos.some(todo => todo.id === id && todo.text !== cleaned)) return;
+  todos = todos.map(todo => todo.id === id ? { ...todo, text: cleaned } : todo);
+  save();
+  render();
+}
+
 function render() {
   if (!list) return;
   // render 重建节点，先记住当前操作位置，再在新节点上恢复焦点。
   const active = document.activeElement;
   const focusedId = list.contains(active) ? active.closest("li")?.dataset.id : null;
-  const focusedAction = active?.classList.contains("todo-delete") ? ".todo-delete" : ".todo-toggle";
+  const focusedAction = active?.dataset.action || "toggle";
   list.replaceChildren();
   const shown = todos.filter(t =>
     filter === "all" ? true : filter === "done" ? t.completed : !t.completed);
@@ -103,7 +112,13 @@ function render() {
     deleteLabel.textContent = "删除";
     delBtn.appendChild(deleteLabel);
     delBtn.setAttribute("aria-label", `删除：${text}`);
-    li.append(toggle, delBtn);
+    const editBtn = document.createElement("button");
+    editBtn.type = "button";
+    editBtn.className = "todo-edit";
+    editBtn.dataset.action = "edit";
+    editBtn.textContent = "编辑";
+    editBtn.setAttribute("aria-label", `编辑：${text}`);
+    li.append(toggle, editBtn, delBtn);
     list.appendChild(li);
   });
   const done = todos.reduce((count, t) => count + (t.completed ? 1 : 0), 0);
@@ -115,7 +130,8 @@ function render() {
   if (storageStatus) storageStatus.textContent = storageMessage;
   if (focusedId) {
     const row = Array.from(list.children).find(li => li.dataset.id === focusedId);
-    (row?.querySelector(focusedAction) || input)?.focus();
+    const button = row && Array.from(row.children).find(child => child.dataset.action === focusedAction);
+    (button || input)?.focus();
   }
 }
 
@@ -130,6 +146,12 @@ function handleListClick(event) {
   if (action && !item.contains(action)) return;
   if (action?.dataset.action === "delete") {
     removeTodo(id);
+    return;
+  }
+  if (action?.dataset.action === "edit") {
+    const todo = todos.find(todo => todo.id === id);
+    const text = window.prompt("修改任务", todo.text);
+    updateTodo(id, text);
     return;
   }
   if (!action || action.dataset.action === "toggle") toggleTodo(id);
