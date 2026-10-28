@@ -1,0 +1,22 @@
+{
+  "name": "web-week9-todo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8009 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8009 --strictPort"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  }
+}

@@ -1,0 +1,437 @@
+/* Base and shared typography */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0e141d;
+  color: #eaf0f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+a {
+  color: #82c9e8;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.2em;
+  outline-color: #b8e6ff;
+  outline-offset: 0.2rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.3;
+}
+
+h1 {
+  margin: 0 0 1rem;
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0 0 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+h3 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Page width and primary regions */
+.site-header,
+main,
+.quick-actions,
+.site-footer {
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.site-header {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background: #121b26;
+  border-bottom: 1px solid #354252;
+}
+
+.site-header p {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.site-header p a {
+  text-decoration: none;
+}
+
+.primary-nav {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.primary-nav ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.primary-nav li {
+  margin: 0;
+}
+
+.primary-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 2.75rem;
+  padding-block: 0.25rem;
+  color: #eaf0f5;
+  text-decoration: none;
+}
+
+.primary-nav span {
+  color: #aab8c7;
+  font-size: 0.9rem;
+}
+
+main {
+  padding: 0 1rem 2rem;
+}
+
+main section {
+  padding-top: 2.5rem;
+}
+
+main p {
+  max-width: 70ch;
+}
+
+main h2 span {
+  display: block;
+  margin-top: 0.15rem;
+  color: #aab8c7;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+main h3 span {
+  color: #aab8c7;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+main ul {
+  margin: 1rem 0 0;
+  padding-left: 1.4rem;
+}
+
+main li {
+  margin-bottom: 0.4rem;
+}
+
+main dl {
+  margin: 1rem 0 0;
+}
+
+main dt {
+  margin-top: 1rem;
+  color: #aab8c7;
+  font-weight: 600;
+}
+
+main dd {
+  margin: 0.25rem 0 0;
+  max-width: 70ch;
+}
+
+article h3 + p {
+  color: #aab8c7;
+  font-size: 0.95rem;
+}
+
+/* Hero */
+.hero {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid #354252;
+}
+
+.hero-content {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.hero p {
+  margin: 0 0 1rem;
+}
+
+.hero img {
+  display: block;
+  width: 60%;
+  max-width: 15rem;
+  margin: 0;
+  border: 1px solid #354252;
+  border-radius: 0.875rem;
+}
+
+.hero-handle {
+  color: #aab8c7;
+}
+
+.hero-handle span {
+  color: #82c9e8;
+  font-weight: 600;
+}
+
+.hero-cta {
+  display: inline-block;
+  margin: 0 1rem 0.5rem 0;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.65rem;
+  background: #82c9e8;
+  color: #0e141d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* Featured projects */
+.project-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.project-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid #354252;
+  border-radius: 0.875rem;
+  background: #17212d;
+}
+
+.project-card h3 {
+  margin: 0 0 0.75rem;
+}
+
+.project-card h3 span {
+  display: block;
+  margin-top: 0.3rem;
+}
+
+.project-card p {
+  margin: 0 0 0.75rem;
+}
+
+.project-summary {
+  color: #aab8c7;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.project-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-card li {
+  display: inline-block;
+  margin: 0 0.45rem 0.5rem 0;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid #354252;
+  border-radius: 0.5rem;
+  background: #121b26;
+  font-size: 0.9rem;
+}
+
+.project-card dl {
+  margin-top: 1rem;
+}
+
+.project-card dt {
+  margin-top: 1.25rem;
+  color: #82c9e8;
+}
+
+.project-card dt span {
+  color: #aab8c7;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.project-card dd {
+  margin-top: 0.35rem;
+  line-height: 1.7;
+}
+
+/* Secondary content and footer */
+.skills-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.skill-group {
+  min-width: 0;
+}
+
+.skill-group h3 {
+  margin-top: 0;
+}
+
+.quick-actions {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #354252;
+  border-radius: 0.875rem;
+  background: #121b26;
+}
+
+.quick-actions ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quick-actions li {
+  margin: 0;
+}
+
+.site-footer {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-top: 1px solid #354252;
+  background: #121b26;
+  color: #aab8c7;
+  font-size: 0.9rem;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* Todo: scoped controls using the existing page colors and spacing. */
+.todo-label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.todo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: 40rem;
+}
+
+.todo-input {
+  flex: 1 1 15rem;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #354252;
+  border-radius: 0.65rem;
+  background: #17212d;
+  color: #eaf0f5;
+  font: inherit;
+}
+
+.todo-input::placeholder {
+  color: #aab8c7;
+}
+
+.todo-add-btn {
+  padding: 0.65rem 1.1rem;
+  border: 0;
+  border-radius: 0.65rem;
+  background: #82c9e8;
+  color: #0e141d;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.todo-input:focus-visible,
+.todo-add-btn:focus-visible {
+  outline: 2px solid #b8e6ff;
+  outline-offset: 0.2rem;
+}
+
+.todo-list {
+  max-width: 40rem;
+  overflow-wrap: anywhere;
+}
+
+/* Mobile first: each breakpoint follows the space needed by its content. */
+@media (min-width: 40rem) {
+  .skills-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Two readable project cards plus their gap and page gutters. */
+@media (min-width: 48rem) {
+  main { padding-inline: 1.5rem; }
+  .project-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Three skill groups; enough room for the bilingual nav and the portrait. */
+@media (min-width: 64rem) {
+  h1 { font-size: 3rem; }
+  main section { padding-top: 3.5rem; }
+  .site-header { flex-direction: row; }
+  .primary-nav ul { justify-content: flex-end; }
+  .hero { flex-direction: row; }
+  .hero-content { flex: 1 1 30rem; }
+  .project-card { padding: 1.75rem; }
+  .skills-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* W7: task rows are generated from state. */
+.todo-list { padding: 0; list-style: none; }
+.todo-item { display: flex; gap: 0.75rem; align-items: center; padding: 0.5rem 0; }
+.todo-toggle, .todo-delete, .todo-edit { min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
+.todo-toggle { flex: 1; min-width: 0; text-align: left; overflow-wrap: anywhere; }
+.todo-delete, .todo-edit { flex: 0 0 auto; }
+.todo-item.done .todo-toggle { text-decoration: line-through; color: #aab8c7; }
+.todo button:focus-visible { outline: 2px solid #b8e6ff; outline-offset: 0.2rem; }
+
+.todo-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.todo-filters button { min-height: 2.75rem; padding: 0.5rem 0.9rem; border: 1px solid #354252; border-radius: 0.5rem; background: #17212d; color: #eaf0f5; font: inherit; cursor: pointer; }
+.todo-filters button[aria-pressed="true"] { background: #82c9e8; color: #0e141d; }
+.todo-storage-status { max-width: 40rem; color: #f4cc85; }
+.todo-storage-status:empty { display: none; }
