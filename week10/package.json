@@ -1,0 +1,30 @@
+{
+  "name": "web-week10-todo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8010 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8010 --strictPort",
+    "lint": "eslint src/ --max-warnings 3",
+    "format": "prettier --write src tests vite.config.ts *.json .eslintrc.cjs .prettierrc.json",
+    "format:check": "prettier --check src tests vite.config.ts *.json .eslintrc.cjs .prettierrc.json"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5",
+    "eslint": "8.57.1",
+    "@typescript-eslint/parser": "8.72.1",
+    "@typescript-eslint/eslint-plugin": "8.72.1",
+    "prettier": "3.9.10",
+    "eslint-config-prettier": "10.1.8"
+  },
+  "engines": {
+    "node": "^22.12.0 || ^24.0.0 || >=26.0.0"
+  }
+}

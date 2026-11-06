@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vite/
+.vitest/
+.DS_Store
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+!package-lock.json
