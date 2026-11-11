@@ -1,0 +1,43 @@
+{
+  "name": "web-week11-react-todo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 8011 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 8011 --strictPort",
+    "lint": "eslint src/ --max-warnings 3",
+    "format": "prettier --write src tests scripts evidence/week11/task3/ai-repair.tsx vite.config.ts *.json .eslintrc.cjs .prettierrc.json",
+    "format:check": "prettier --check src tests scripts evidence/week11/task3/ai-repair.tsx vite.config.ts *.json .eslintrc.cjs .prettierrc.json",
+    "lint:summary": "node scripts/lint-summary.cjs",
+    "lint:task3": "eslint evidence/week11/task3/ai-repair.tsx --max-warnings 0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.9",
+    "@types/node": "26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@typescript-eslint/eslint-plugin": "8.72.1",
+    "@typescript-eslint/parser": "8.72.1",
+    "@vitejs/plugin-react": "6.1.1",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "jsdom": "31.0.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "dependencies": {
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}

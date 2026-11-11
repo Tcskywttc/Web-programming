@@ -1,0 +1,6 @@
+本轮约束由 Codex 根据已确认 Plan 和教师靶子代码整理；不是用户逐字输入的历史原文。
+
+请修复教师提供的“假 React” TodoApp。先识别 listRef 与 todos 共用引用、push 原地修改、setTodos 原引用、手工 innerHTML 插入、map 内修改对象且丢弃返回值等问题，再给出可运行的 TSX。
+必须以 useState 为唯一任务数据源，使用函数式更新，增删改生成新引用，列表只由 JSX 和稳定 key 渲染。禁止直接改 State/Props、修改 React 管理的 DOM、forceUpdate 或用类型断言掩盖错误。保留输入受控、空白拒绝、成功添加后清空、完成状态切换等行为。
+修复版允许复用正式项目的 addTodo / toggleTodo / normalizeText，以沿用 W10 的 trim、script 标签约定和安全 ID 规则；说明这部分比靶子代码更严格。保留原始靶子与首次修复稿，不故意编造一个错误的 AI 首版。
+验证：空白提交不增加任务；连续添加 A、B 后修改输入触发其他 State 更新，列表仍恰好两项；切换 A 只改变 A。审查结论区分 Codex 验证与本人最终处置。
